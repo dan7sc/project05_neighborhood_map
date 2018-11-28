@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body>
-
+    <!-- Header-->
     <header>
       <div class="container-fluid">
         <div class="row">
@@ -22,13 +22,20 @@
         <hr>
       </div>
     </header>
-
+    <!-- Main section -->
     <main>
 
       <!-- Map -->
       <div class="container-fluid">
         <div class="row">
-          <div class="col-sm-12 col-md-12">
+          <div class="col-md-3">
+            <input data-bind="value: current, valueUpdate: 'input'" type="text" placeholder="Search" size=30 />
+            <div data-bind="text: current"></div>
+            <ul data-bind="foreach: filterMarkers">
+              <li data-bind="text: $data.title"></li>
+            </ul>
+          </div>
+          <div class="col-md-9">
             <div id="map"></div>
           </div>
         </div>
@@ -36,8 +43,8 @@
 
     </main>
 
+    <!-- Footer -->
     <footer>
-      <!-- Footer -->
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-12 col-md-12 text-center">
@@ -47,9 +54,13 @@
       </div>
     </footer>
 
+    <!-- Knockout version 3 -->
     <script src="js/lib/knockout-3.4.2.js"></script>
+    <!-- Model -->
     <script src="js/model.js"></script>
+    <!-- Personal script -->
     <script src="js/script.js"></script>
+    <!-- Google Maps api -->
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAjpyia7TRlb8gj-lLOz99Nw6SNxzXv-E&v=3&callback=initMap">
     </script>
