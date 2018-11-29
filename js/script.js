@@ -1,7 +1,7 @@
 
 var map;
 
-// Create a new blank array for all markers.
+// Create a new blank array for all markers
 var markers = [];
 
 function initMap() {
@@ -10,27 +10,53 @@ function initMap() {
     center: {lat: 40.7413549, lng: -73.9980244},
     zoom: 13
   });
-// Create an array of markers on initialize.
+// Create an array of markers on initialize
   for (let i = 0; i < locations.length; i++) {
-    // Get the position from the location array.
+    // Get the position from the location array
     let position = locations[i].location;
     let title = locations[i].title;
-    // Create a marker per location, and put into markers array.
+    // Create a marker per location, and put into markers array
      let marker = new google.maps.Marker({
       position: position,
       title: title,
       animation: google.maps.Animation.DROP,
       id: i
     });
-    // Push the marker to our array of markers.
+    // Push the marker to our array of markers
     markers.push(marker);
   }
   showMarkers();
-
+  // This makes Knockout get to work
   ko.applyBindings(new ViewModel());
 }
 
-// This function will loop through the markers array and display them all.
+var ViewModel = function() {
+  let self = this;
+  // observable array for list of locations
+  this.currentLocations = ko.observableArray([]);
+  // observable for current location
+  this.current = ko.observable("");
+
+  // This loop will put the locations in a observable array
+  for (let i = 0; i < locations.length; i++) {
+    let newLocation = locations[i];
+    this.currentLocations.push(new setLocation(newLocation, i));
+  }
+
+  // This function will filter locations by name
+  this.filterMarkers = ko.computed(function() {
+    let filteredMarkers = [];
+    for(let i = 0; i < self.currentLocations().length; i++) {
+      if(self.currentLocations()[i].title.toLowerCase().includes(self.current().toLowerCase())) {
+        filteredMarkers.push(self.currentLocations()[i]);
+      }
+    }
+    // return a list of locations filtered by name
+    return filteredMarkers;
+  });
+}
+
+// This function will loop through the markers array and display them all
 function showMarkers() {
   let bounds = new google.maps.LatLngBounds();
   // Extend the boundaries of the map for each marker and display the marker
@@ -41,71 +67,9 @@ function showMarkers() {
   map.fitBounds(bounds);
 }
 
-
-var ViewModel = function() {
-  var self = this;
-  this.currentMarkers = ko.observableArray([]);
-  this.current = ko.observable("");
-
-
-  function setMarkers(data) {
-    this.title = data.title;
-    this.position = data.position;
-    this.id = data.id;
-
-    this.visible = true;
-  }
-
-  for (var i = 0; i < markers.length; i++) {
-    let newMarker = markers[i];
-    this.currentMarkers.push(new setMarkers(newMarker));
-  }
-
-  this.filterMarkers = ko.computed(function() {
-    let filteredMarkers = [];
-    for(let i = 0; i < self.currentMarkers().length; i++) {
-      if(self.currentMarkers()[i].title.toLowerCase().includes(self.current().toLowerCase())) {
-        filteredMarkers.push(self.currentMarkers()[i]);
-      }
-    }
-    return filteredMarkers;
-  });
-
-/*
-  this.filterMarkers = ko.computed(function() {
-    //console.log(self.currentMarkers().length);
-    let filteredMarkers = [];
-    for(let i = 0; i < self.currentMarkers().length; i++) {
-      //filteredMarkers = self.currentMarkers()[i];
-      //console.log(filteredMarkers.title.toLowerCase(), "--", self.current().toLowerCase());
-      if(self.currentMarkers()[i].title.toLowerCase().includes(self.current().toLowerCase())) {
-        //currentFilter.push(filteredMarkers);
-        self.currentMarkers()[i].visible = true;
-        filteredMarkers.push(self.currentMarkers()[i]);
-      }
-      else {
-        self.currentMarkers()[i].visible = false;
-      }
-    }
-    //console.log(self.currentMarkers());
-    return filteredMarkers;
-  });
-
-/*
-  this.filterMarkers = ko.computed(function() {
-    let currentFilter = [];
-    let filteredMarkers;
-    //console.log(self.currentMarkers().length);
-    for(let i = 0; i < self.currentMarkers().length; i++) {
-      filteredMarkers = self.currentMarkers()[i];
-      //console.log(filteredMarkers.title.toLowerCase(), "--", self.current().toLowerCase());
-      if(filteredMarkers.title.toLowerCase().includes(self.current().toLowerCase())) {
-        currentFilter.push(filteredMarkers);
-      }
-    }
-    //console.log(currentFilter);
-    return currentFilter;
-  });
-*/
-
+// This function will store information about a location
+function setLocation(data, id) {
+  this.title = data.title;
+  this.position = data.position;
+  this.id = id;
 }
