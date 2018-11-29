@@ -70,6 +70,6 @@ function showMarkers() {
 // This function will store information about a location
 function setLocation(data, id) {
   this.title = data.title;
-  this.position = data.position;
+  this.position = data.location;
   this.id = id;
 }
