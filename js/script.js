@@ -54,6 +54,10 @@ var ViewModel = function() {
     for(let i = 0; i < self.currentLocations().length; i++) {
       if(self.currentLocations()[i].title.toLowerCase().includes(self.current().toLowerCase())) {
         filteredMarkers.push(self.currentLocations()[i]);
+        markers[i].setVisible(true);
+      }
+      else {
+        markers[i].setVisible(false);
       }
     }
     // return a list of locations filtered by name
