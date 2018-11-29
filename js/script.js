@@ -3,6 +3,7 @@ var map;
 var infoWindow;
 // Create a new blank array for all markers
 var markers = [];
+var $wikiElem = $('#wikipedia-links');
 
 function initMap() {
   // Constructor creates a new map
@@ -10,6 +11,7 @@ function initMap() {
     center: {lat: 40.7413549, lng: -73.9980244},
     zoom: 13
   });
+  // Constructor creates a new infowindow
   infoWindow = new google.maps.InfoWindow();
   // Create an array of markers on initialize
   for (let i = 0; i < locations.length; i++) {
@@ -28,6 +30,7 @@ function initMap() {
     marker.addListener('click', function() {
       animateMarker(this);
       populateInfoWindow(this, infoWindow);
+      loadWikipediaData(this);
     });
     // Push the marker to our array of markers
     markers.push(marker);
@@ -102,10 +105,12 @@ function populateInfoWindow(marker, infowindow) {
 }
 
 // This function shows the infowindow through the list
+// animates the marker and load wikipedia data
 function showInfoWindow(data, event) {
   if(event.type == 'click') {
     animateMarker(markers[data.id]);
     populateInfoWindow(markers[data.id], infoWindow);
+    loadWikipediaData(markers[data.id]);
   }
 }
 
@@ -128,4 +133,29 @@ function animateMarker(marker) {
       marker.setAnimation(null);
     }), 2000);
   }
+}
+
+// Function loads wikipedia data
+function loadWikipediaData(marker) {
+    $wikiElem.text("");
+    let wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
+    let wikiRequestTimeout = setTimeout(function(){
+        $wikiElem.text("Failed to get wikipedia resources.");
+    }, 5000);
+
+    $.ajax({
+        url: wikiUrl,
+        dataType: "jsonp",
+        jsonp: "callback",
+        success: function( response ) {
+            let articleList = response[1];
+            for (let i = 0; i < articleList.length; i++) {
+                articleStr = articleList[i];
+                let url = 'http://en.wikipedia.org/wiki/' + articleStr;
+                $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
+            };
+            clearTimeout(wikiRequestTimeout);
+        }
+    });
+    return false;
 }
