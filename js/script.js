@@ -23,8 +23,10 @@ function initMap() {
       animation: google.maps.Animation.DROP,
       id: i
     });
-    // Add infowindow when the marker is clicked
+    // Animate the marker and display infowindow
+    // when the marker is clicked
     marker.addListener('click', function() {
+      animateMarker(this);
       populateInfoWindow(this, infoWindow);
     });
     // Push the marker to our array of markers
@@ -102,13 +104,28 @@ function populateInfoWindow(marker, infowindow) {
 // This function shows the infowindow through the list
 function showInfoWindow(data, event) {
   if(event.type == 'click') {
+    animateMarker(markers[data.id]);
     populateInfoWindow(markers[data.id], infoWindow);
   }
 }
 
-// This function closes th infowindow
+// This function closes the infowindow
 function closeInfoWindow(infowindow) {
   if(infowindow) {
     infowindow.close();
+  }
+}
+
+// This function animates the infowindow
+function animateMarker(marker) {
+  if (marker.getAnimation() !== null) {
+    marker.setAnimation(null);
+  }
+  else {
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    // Marker bounces during two milliseconds
+    setTimeout((function() {
+      marker.setAnimation(null);
+    }), 2000);
   }
 }
