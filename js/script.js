@@ -48,9 +48,11 @@ var ViewModel = function() {
     this.currentLocations.push(new setLocation(newLocation, i));
   }
 
-  // This function will filter locations by name
+  // This function filters locations by name in the list
+  // and filters markers in the map
   this.filterMarkers = ko.computed(function() {
     let filteredMarkers = [];
+    closeInfoWindow(infoWindow);
     for(let i = 0; i < self.currentLocations().length; i++) {
       if(self.currentLocations()[i].title.toLowerCase().includes(self.current().toLowerCase())) {
         filteredMarkers.push(self.currentLocations()[i]);
@@ -76,7 +78,7 @@ function showMarkers() {
   map.fitBounds(bounds);
 }
 
-// This function will store information about a location
+// This function stores information about a location
 function setLocation(data, id) {
   this.title = data.title;
   this.position = data.location;
@@ -97,9 +99,16 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
-// This function show the infowindow through the list
+// This function shows the infowindow through the list
 function showInfoWindow(data, event) {
   if(event.type == 'click') {
     populateInfoWindow(markers[data.id], infoWindow);
+  }
+}
+
+// This function closes th infowindow
+function closeInfoWindow(infowindow) {
+  if(infowindow) {
+    infowindow.close();
   }
 }
