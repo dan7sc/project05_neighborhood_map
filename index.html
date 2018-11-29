@@ -31,7 +31,7 @@
           <div class="col-md-3">
             <input data-bind="value: current, valueUpdate: 'input'" type="text" placeholder="Search" size=30 />
             <ul data-bind="foreach: filterMarkers">
-              <li data-bind="text: $data.title"></li>
+              <li data-bind="text: $data.title, event: { click: showInfoWindow }"></li>
             </ul>
           </div>
           <div class="col-md-9">

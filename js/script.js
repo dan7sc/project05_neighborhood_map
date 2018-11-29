@@ -92,3 +92,10 @@ function populateInfoWindow(marker, infowindow) {
     });
   }
 }
+
+// This function show the infowindow through the list
+function showInfoWindow(data, event) {
+  if(event.type == 'click') {
+    populateInfoWindow(markers[data.id], infoWindow);
+  }
+}
