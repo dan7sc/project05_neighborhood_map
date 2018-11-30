@@ -3,7 +3,14 @@ var map;
 var infoWindow;
 // Create a new blank array for all markers
 var markers = [];
+// Wikipedia jquery element
 var $wikiElem = $('#wikipedia-links');
+// FourSquare jquery element
+var $foursquareElem = $('#foursquare-links');
+// FourSquare client id
+var clientID = "INMCOI5N21EXKPZABYDFXGQK2YA3QMWWCA4EO2Y3VGT4ZSMS";
+// FourSquare client secret
+var client_secret = "CN5DI1ILH05BM0KITSPPCGH0I4IBDXXGCKYQN4JKSHPLHVZ3";
 
 function initMap() {
   // Constructor creates a new map
@@ -31,6 +38,7 @@ function initMap() {
       animateMarker(this);
       populateInfoWindow(this, infoWindow);
       loadWikipediaData(this);
+      loadFourSquareData(this);
     });
     // Push the marker to our array of markers
     markers.push(marker);
@@ -111,6 +119,7 @@ function showInfoWindow(data, event) {
     animateMarker(markers[data.id]);
     populateInfoWindow(markers[data.id], infoWindow);
     loadWikipediaData(markers[data.id]);
+    loadFourSquareData(markers[data.id]);
   }
 }
 
@@ -137,25 +146,66 @@ function animateMarker(marker) {
 
 // Function loads wikipedia data
 function loadWikipediaData(marker) {
-    $wikiElem.text("");
-    let wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
-    let wikiRequestTimeout = setTimeout(function(){
-        $wikiElem.text("Failed to get wikipedia resources.");
-    }, 5000);
+  $wikiElem.text("");
+  let wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
+  let wikiRequestTimeout = setTimeout(function(){
+    $wikiElem.text("Failed to get wikipedia resources.");
+  }, 5000);
 
-    $.ajax({
-        url: wikiUrl,
-        dataType: "jsonp",
-        jsonp: "callback",
-        success: function( response ) {
-            let articleList = response[1];
-            for (let i = 0; i < articleList.length; i++) {
-                articleStr = articleList[i];
-                let url = 'http://en.wikipedia.org/wiki/' + articleStr;
-                $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
-            };
-            clearTimeout(wikiRequestTimeout);
-        }
+  $.ajax({
+    url: wikiUrl,
+    dataType: "jsonp",
+    jsonp: "callback",
+    success: function( response ) {
+      let articleList = response[1];
+      for (let i = 0; i < articleList.length; i++) {
+        articleStr = articleList[i];
+        let url = 'http://en.wikipedia.org/wiki/' + articleStr;
+        $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
+      };
+      clearTimeout(wikiRequestTimeout);
+    }
+  });
+  return false;
+}
+
+// Function loads foursquare data
+function loadFourSquareData(marker) {
+  // Clean foursquare element
+  $foursquareElem.text("");
+  // Set foursquare url
+  let foursquareUrl = 'https://api.foursquare.com/v2/venues/search?client_id=' + clientID + '&client_secret=' + client_secret + '&v=20180323' + '&ll=' + marker.position.lat() + ',' + marker.position.lng() + '&limit=1';
+
+  $.getJSON(foursquareUrl, function(data) {
+    // Get the response
+    let response = data.response.venues[0];
+    // Get information about the marker
+    let id = response.id;
+    let address = response.location.formattedAddress[0];
+    let city = response.location.formattedAddress[1];
+    let country = response.location.formattedAddress[2];
+
+    // Set information in the page
+    $foursquareElem.append('<li>' + address + '</li>');
+    $foursquareElem.append('<li>' + city + '</li>');
+    $foursquareElem.append('<li>' + country + '</li>');
+
+    // Set foursquare photo url
+    let foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + id + '/photos?client_id=' + clientID + '&client_secret=' + client_secret + '&v=20180323' + '&ll=' + marker.position.lat() + ',' + marker.position.lng() + '&limit=1';
+    let photoUrl = '';
+
+    $.getJSON(foursquarePhotoUrl, function(photoData) {
+      // Get response
+      let response = photoData.response.photos.items[0];
+      // Define photo path
+      photoUrl = response.prefix + '200x200' + response.suffix;
+      // Set photo in the page
+      $foursquareElem.append('<img src=' + photoUrl + ' alt="' + marker.title + '" />');
+    }).fail(function() {
+      $foursquareElem.text('Four Square Photo Could Not Be Loaded');
     });
-    return false;
+
+  }).fail(function() {
+    $foursquareElem.text('Four Square Data Could Not Be Loaded');
+  });
 }
