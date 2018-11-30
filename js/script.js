@@ -7,10 +7,15 @@ var markers = [];
 var $wikiElem = $('#wikipedia-links');
 // FourSquare jquery element
 var $foursquareElem = $('#foursquare-links');
+// Flickr jquery element
+var $flickrElem = $('#flickr-links');
 // FourSquare client id
 var clientID = "INMCOI5N21EXKPZABYDFXGQK2YA3QMWWCA4EO2Y3VGT4ZSMS";
 // FourSquare client secret
 var client_secret = "CN5DI1ILH05BM0KITSPPCGH0I4IBDXXGCKYQN4JKSHPLHVZ3";
+// Flickr client key
+var client_key = "2f201af775b1b5eea625f0b72ede4b7c";
+
 
 function initMap() {
   // Constructor creates a new map
@@ -39,6 +44,7 @@ function initMap() {
       populateInfoWindow(this, infoWindow);
       loadWikipediaData(this);
       loadFourSquareData(this);
+      loadFlickrData(this);
     });
     // Push the marker to our array of markers
     markers.push(marker);
@@ -120,6 +126,7 @@ function showInfoWindow(data, event) {
     populateInfoWindow(markers[data.id], infoWindow);
     loadWikipediaData(markers[data.id]);
     loadFourSquareData(markers[data.id]);
+    loadFlickrData(markers[data.id]);
   }
 }
 
@@ -207,5 +214,36 @@ function loadFourSquareData(marker) {
 
   }).fail(function() {
     $foursquareElem.text('Four Square Data Could Not Be Loaded');
+  });
+}
+
+// Function loads flickr data
+function loadFlickrData(marker) {
+  // Clean flickr element
+  $flickrElem.text("");
+  // Set flickr url
+  let flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + client_key + '&media=photos&privacy_filter=1&format=json&lat=' + marker.position.lat() + '&lon=' + marker.position.lng() + '&radius=.1&radius_units=mi';
+
+  $.ajax({
+    url: flickrUrl,
+    dataType: "jsonp",
+    jsonp: "jsoncallback"
+  }).done(function(response) {
+    // Choose random photo index
+    let index = Math.round((Math.random()*100)%10);
+    // Get response
+    let data = response.photos.photo[index];
+    // Get photo details
+    let id = data.id;
+    let owner = data.owner;
+    let secret = data.secret;
+    let server = data.server;
+    let farm = data.farm;
+    let title = data.title;
+    let size = 'm';
+    // Set photo in the page
+    $flickrElem.append('<img src="https://farm'+ farm +'.staticflickr.com/'+ server +'/'+ id +'_'+ secret + '_' + size + '.jpg" alt="' + title + '" />');
+  }).fail(function() {
+    $flickrElem.append('Flickr Data Could Not Be Loaded');
   });
 }
