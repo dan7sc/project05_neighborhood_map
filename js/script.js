@@ -180,7 +180,7 @@ function loadFourSquareData(marker) {
       // Set photo in the page
       $foursquareElem.append('<img src=' + photoUrl + ' alt="' + marker.title + '" />');
     }).fail(function() {
-      $foursquareElem.text('Four Square Photo Could Not Be Loaded');
+      $foursquareElem.append('Four Square Photo Could Not Be Loaded');
     });
 
   }).fail(function() {
