@@ -19,26 +19,28 @@
             <h1>Neighborhood Map</h1>
           </div>
         </div>
-        <hr>
       </div>
     </header>
     <!-- Main section -->
     <main>
 
       <!-- Map -->
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-3">
-            <input data-bind="value: current, valueUpdate: 'input'" type="text" placeholder="Search" size=30 />
-            <ul data-bind="foreach: filterMarkers">
-              <li data-bind="text: $data.title, event: { click: showInfoWindow }"></li>
-            </ul>
-          </div>
-          <div class="col-md-9">
-            <div id="map"></div>
+      <div class="row no-gutters">
+        <div class="col-md-3">
+          <input class="input-filter" data-bind="value: current, valueUpdate: 'input'" type="text" placeholder="Filter" />
+          <svg class="input-filter-icon" width="24px" height="24px" version="1.1"
+               xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <image xlink:href="img/outline-search-24px.svg" x="0" y="0" height="24px" width="24px"/>
+          </svg>
+          <div class="list" data-bind="foreach: filterMarkers">
+            <li data-bind="text: $data.title, event: { click: showInfoWindow }"></li>
           </div>
         </div>
+        <div class="col-md-9">
+          <div id="map"></div>
+        </div>
       </div>
+
       <div class="container">
         <div class="row">
           <div class="col-md-6">
