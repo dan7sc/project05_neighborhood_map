@@ -3,8 +3,6 @@ var map;
 var infoWindow;
 // Create a new blank array for all markers
 var markers = [];
-// Wikipedia jquery element
-var $wikiElem = $('#wikipedia-links');
 // FourSquare jquery element
 var $foursquareElem = $('#foursquare-links');
 // Flickr jquery element
@@ -42,7 +40,6 @@ function initMap() {
     marker.addListener('click', function() {
       animateMarker(this);
       populateInfoWindow(this, infoWindow);
-      loadWikipediaData(this);
       loadFourSquareData(this);
       loadFlickrData(this);
     });
@@ -124,7 +121,6 @@ function showInfoWindow(data, event) {
   if(event.type == 'click') {
     animateMarker(markers[data.id]);
     populateInfoWindow(markers[data.id], infoWindow);
-    loadWikipediaData(markers[data.id]);
     loadFourSquareData(markers[data.id]);
     loadFlickrData(markers[data.id]);
   }
@@ -149,31 +145,6 @@ function animateMarker(marker) {
       marker.setAnimation(null);
     }), 2000);
   }
-}
-
-// Function loads wikipedia data
-function loadWikipediaData(marker) {
-  $wikiElem.text("");
-  let wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + marker.title + '&format=json&callback=wikiCallback';
-  let wikiRequestTimeout = setTimeout(function(){
-    $wikiElem.text("Failed to get wikipedia resources.");
-  }, 5000);
-
-  $.ajax({
-    url: wikiUrl,
-    dataType: "jsonp",
-    jsonp: "callback",
-    success: function( response ) {
-      let articleList = response[1];
-      for (let i = 0; i < articleList.length; i++) {
-        articleStr = articleList[i];
-        let url = 'http://en.wikipedia.org/wiki/' + articleStr;
-        $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
-      };
-      clearTimeout(wikiRequestTimeout);
-    }
-  });
-  return false;
 }
 
 // Function loads foursquare data
