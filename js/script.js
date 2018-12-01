@@ -40,7 +40,6 @@ function initMap() {
     marker.addListener('click', function() {
       animateMarker(this);
       loadFourSquareData(this);
-      loadFlickrData(this);
     });
     // Push the marker to our array of markers
     markers.push(marker);
@@ -105,7 +104,7 @@ function populateInfoWindow(marker, infowindow, data) {
   // Check to make sure the infowindow is not already opened on this marker
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
-    infowindow.setContent('<h6>' + marker.title + '</h6>' + data);
+    infowindow.setContent('<h6>' + marker.title + '</h6>' + data + '<div><small>Source: FourSquare, Flickr</small></div>');
     infowindow.open(map, marker);
     // Make sure the marker property is cleared if the infowindow is closed
     infowindow.addListener('closeclick', function() {
@@ -120,7 +119,6 @@ function showInfoWindow(data, event) {
   if(event.type == 'click') {
     animateMarker(markers[data.id]);
     loadFourSquareData(markers[data.id]);
-    loadFlickrData(markers[data.id]);
   }
 }
 
@@ -183,21 +181,21 @@ function loadFourSquareData(marker) {
       $foursquareElem.append('<img src=' + photoUrl + ' alt="' + marker.title + '" />');
       // Set foursquare photo in HTML format
       foursquareView += '<img src=' + photoUrl + ' alt="' + marker.title + '" height="170" width="200" />';
+      populateInfoWindow(marker, infoWindow, foursquareView);
     }).fail(function() {
       $foursquareElem.append('Four Square Photo Could Not Be Loaded');
+      loadFlickrData(marker, foursquareView);
     });
   }).fail(function() {
     $foursquareElem.text('Four Square Data Could Not Be Loaded');
-  }).then(function() {
-      // Display foursquare data in the infowindow
-      populateInfoWindow(marker, infoWindow, foursquareView);
-    });
+  });
 }
 
 // Function loads flickr data
-function loadFlickrData(marker) {
+function loadFlickrData(marker, str) {
   // Clean flickr element
   $flickrElem.text("");
+  let flickrView = '';
   // Set flickr url
   let flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + client_key + '&media=photos&privacy_filter=1&format=json&lat=' + marker.position.lat() + '&lon=' + marker.position.lng() + '&radius=.1&radius_units=mi';
 
@@ -220,6 +218,9 @@ function loadFlickrData(marker) {
     let size = 'm';
     // Set photo in the page
     $flickrElem.append('<img src="https://farm'+ farm +'.staticflickr.com/'+ server +'/'+ id +'_'+ secret + '_' + size + '.jpg" alt="' + title + '" />');
+    flickrView += '<img src="https://farm'+ farm +'.staticflickr.com/'+ server +'/'+ id +'_'+ secret + '_' + size + '.jpg" alt="' + title + '" height="170" width="200" />';
+    str += flickrView;
+    populateInfoWindow(marker, infoWindow, str);
   }).fail(function() {
     $flickrElem.append('Flickr Data Could Not Be Loaded');
   });
