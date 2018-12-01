@@ -39,7 +39,6 @@ function initMap() {
     // when the marker is clicked
     marker.addListener('click', function() {
       animateMarker(this);
-      populateInfoWindow(this, infoWindow);
       loadFourSquareData(this);
       loadFlickrData(this);
     });
@@ -102,11 +101,11 @@ function setLocation(data, id) {
 }
 
 // This function populates the infowindow when the marker is clicked
-function populateInfoWindow(marker, infowindow) {
+function populateInfoWindow(marker, infowindow, data) {
   // Check to make sure the infowindow is not already opened on this marker
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
-    infowindow.setContent('<div>' + marker.title + '</div>');
+    infowindow.setContent('<h6>' + marker.title + '</h6>' + data);
     infowindow.open(map, marker);
     // Make sure the marker property is cleared if the infowindow is closed
     infowindow.addListener('closeclick', function() {
@@ -120,7 +119,6 @@ function populateInfoWindow(marker, infowindow) {
 function showInfoWindow(data, event) {
   if(event.type == 'click') {
     animateMarker(markers[data.id]);
-    populateInfoWindow(markers[data.id], infoWindow);
     loadFourSquareData(markers[data.id]);
     loadFlickrData(markers[data.id]);
   }
@@ -153,25 +151,29 @@ function loadFourSquareData(marker) {
   $foursquareElem.text("");
   // Set foursquare url
   let foursquareUrl = 'https://api.foursquare.com/v2/venues/search?client_id=' + clientID + '&client_secret=' + client_secret + '&v=20180323' + '&ll=' + marker.position.lat() + ',' + marker.position.lng() + '&limit=1';
+  // Display foursquare
+  let foursquareView = '';
 
   $.getJSON(foursquareUrl, function(data) {
     // Get the response
     let response = data.response.venues[0];
     // Get information about the marker
     let id = response.id;
-    let address = response.location.formattedAddress[0];
-    let city = response.location.formattedAddress[1];
-    let country = response.location.formattedAddress[2];
+    let address = response.location.address;
+    let city = response.location.city;
+    let country = response.location.country;
+    let state = response.location.state;
 
     // Set information in the page
     $foursquareElem.append('<li>' + address + '</li>');
-    $foursquareElem.append('<li>' + city + '</li>');
+    $foursquareElem.append('<li>' + city + ', ' + state + '</li>');
     $foursquareElem.append('<li>' + country + '</li>');
+    // Set foursquare data in HTML format
+    foursquareView += '<div>' + address + '</div><div>' + city + ', ' + state + '</div><div>' + country + '</div></br>';
 
     // Set foursquare photo url
     let foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + id + '/photos?client_id=' + clientID + '&client_secret=' + client_secret + '&v=20180323' + '&ll=' + marker.position.lat() + ',' + marker.position.lng() + '&limit=1';
     let photoUrl = '';
-
     $.getJSON(foursquarePhotoUrl, function(photoData) {
       // Get response
       let response = photoData.response.photos.items[0];
@@ -179,13 +181,17 @@ function loadFourSquareData(marker) {
       photoUrl = response.prefix + '200x200' + response.suffix;
       // Set photo in the page
       $foursquareElem.append('<img src=' + photoUrl + ' alt="' + marker.title + '" />');
+      // Set foursquare photo in HTML format
+      foursquareView += '<img src=' + photoUrl + ' alt="' + marker.title + '" height="170" width="200" />';
     }).fail(function() {
       $foursquareElem.append('Four Square Photo Could Not Be Loaded');
     });
-
   }).fail(function() {
     $foursquareElem.text('Four Square Data Could Not Be Loaded');
-  });
+  }).then(function() {
+      // Display foursquare data in the infowindow
+      populateInfoWindow(marker, infoWindow, foursquareView);
+    });
 }
 
 // Function loads flickr data
