@@ -18,7 +18,9 @@ function initMap() {
     zoom: 13
   });
   // Constructor creates a new infowindow
-  infoWindow = new google.maps.InfoWindow();
+  infoWindow = new google.maps.InfoWindow({
+    maxWidth: 210
+  });
   // Create an array of markers on initialize
   for (let i = 0; i < locations.length; i++) {
     // Get the position from the location array
