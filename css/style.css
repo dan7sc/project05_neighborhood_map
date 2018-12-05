@@ -40,6 +40,10 @@ li:hover {
   z-index: 1;
 }
 
+footer {
+  padding-top: 3em;
+}
+
 @media (max-width: 767.98px) {
   .list {
     max-height: 8em;
