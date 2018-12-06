@@ -59,7 +59,7 @@ var ViewModel = function() {
   // This loop will put the locations in a observable array
   for (let i = 0; i < locations.length; i++) {
     let newLocation = locations[i];
-    this.currentLocations.push(new setLocation(newLocation, i));
+    this.currentLocations.push(new SetLocation(newLocation, i));
   }
 
   // This function filters locations by name in the list
@@ -93,7 +93,7 @@ function showMarkers() {
 }
 
 // This function stores information about a location
-function setLocation(data, id) {
+function SetLocation(data, id) {
   this.title = data.title;
   this.position = data.location;
   this.id = id;
