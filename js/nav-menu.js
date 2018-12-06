@@ -1,7 +1,7 @@
 // Open the drawer when the menu ison is clicked.
 
 var menu = $('#menu');
-var main = $('header, .map-canvas, .list');
+var main = $('header, footer, .map-canvas, .list');
 var drawer = $('.drawer');
 
 menu.on('click', function(e) {
