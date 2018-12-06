@@ -1,5 +1,3 @@
-'use strict';
-
 var map;
 var infoWindow;
 // Create a new blank array for all markers
@@ -12,6 +10,7 @@ var client_secret = "CN5DI1ILH05BM0KITSPPCGH0I4IBDXXGCKYQN4JKSHPLHVZ3";
 var client_key = "2f201af775b1b5eea625f0b72ede4b7c";
 
 function initMap() {
+  'use strict';
   // Constructor creates a new map
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 40.7413549, lng: -73.9980244},
@@ -33,21 +32,24 @@ function initMap() {
       animation: google.maps.Animation.DROP,
       id: i
     });
-    // Animate the marker and display infowindow
-    // when the marker is clicked
-    marker.addListener('click', function() {
-      animateMarker(this);
-      loadFourSquareData(this);
-    });
     // Push the marker to our array of markers
     markers.push(marker);
   }
+  // Animate the marker and display infowindow
+  // when the marker is clicked
+  markers.forEach(function(elem) {
+    elem.addListener('click', function() {
+      animateMarker(markers);
+      loadFourSquareData(markers);
+    });
+  });
   showMarkers();
   // This makes Knockout get to work
   ko.applyBindings(new ViewModel());
 }
 
 var ViewModel = function() {
+  'use strict';
   let self = this;
   // observable array for list of locations
   this.currentLocations = ko.observableArray([]);
@@ -77,7 +79,7 @@ var ViewModel = function() {
     // return a list of locations filtered by name
     return filteredMarkers;
   });
-}
+};
 
 // This function will loop through the markers array and display them all
 function showMarkers() {
@@ -176,14 +178,14 @@ function loadFourSquareData(marker) {
         // If no response display error message
         if(typeof response === 'undefined') {
           console.log('No FourSquare response. Load flickr data.');
-          foursquareView += '<div class="error-msg-load">Foursquare photo not available.</div>'
+          foursquareView += '<div class="error-msg-load">Foursquare photo not available.</div>';
           loadFlickrData(marker, foursquareView);
         }
         else {
           // Define photo path
           photoUrl = response.prefix + '200x200' + response.suffix;
           // Set foursquare photo in HTML format
-          foursquareView += '<img src=' + photoUrl + ' alt="' + marker.title + '" height="150" width="180" />'
+          foursquareView += '<img src=' + photoUrl + ' alt="' + marker.title + '" height="150" width="180" />';
           populateInfoWindow(marker, infoWindow, foursquareView);
         }
       }).fail(function() {
