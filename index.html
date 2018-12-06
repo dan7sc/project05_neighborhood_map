@@ -15,8 +15,13 @@
       <div class="container-fluid">
         <div class="row">
           <!-- Header title -->
-          <div class="col-sm-12 col-md-12 text-right">
-            <h1>Neighborhood Map</h1>
+          <a id="menu" class="col-1 col-md-1">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"/>
+            </svg>
+          </a>
+          <div class="col-11 col-md-11 text-right">
+            <h1 class="header-title">Neighborhood Map</h1>
           </div>
         </div>
       </div>
@@ -26,15 +31,17 @@
 
       <!-- Map -->
       <div class="row no-gutters">
-        <div class="col-md-3">
-          <input class="input-filter" data-bind="textInput: current" type="text" placeholder="Filter" />
-          <svg class="input-filter-icon" width="24px" height="24px" version="1.1"
-               xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-            <image xlink:href="img/outline-search-24px.svg" x="0" y="0" height="24px" width="24px"/>
-          </svg>
-          <div class="list" data-bind="foreach: filterMarkers">
-            <li data-bind="text: $data.title, click: showInfoWindow"></li>
-          </div>
+        <div class="maps">
+          <nav id="drawer">
+            <input class="input-filter" data-bind="textInput: current" type="text" placeholder="Filter" />
+            <svg class="input-filter-icon" width="24px" height="24px" version="1.1"
+                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <image xlink:href="img/outline-search-24px.svg" x="0" y="0" height="24px" width="24px"/>
+            </svg>
+            <div class="list" data-bind="foreach: filterMarkers">
+              <li data-bind="text: $data.title, click: showInfoWindow"></li>
+            </div>
+          </nav>
         </div>
         <div class="col-md-9">
           <div id="map" class="map-canvas"></div>
@@ -60,6 +67,8 @@
     <script src="js/lib/knockout-3.4.2.js"></script>
     <!-- Model -->
     <script src="js/model.js"></script>
+    <!-- Nav Menu script -->
+    <script src="js/nav-menu.js"></script>
     <!-- Personal script -->
     <script src="js/script.js"></script>
     <!-- Google Maps api -->
