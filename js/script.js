@@ -1,6 +1,8 @@
 
 var map;
 var infoWindow;
+'use strict';
+
 // Create a new blank array for all markers
 var markers = [];
 // FourSquare client id
