@@ -16,7 +16,7 @@
         <div class="row">
           <!-- Header title -->
           <a id="menu" class="col-1 col-md-1">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <svg width="28px" height="28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M2 6h20v3H2zm0 5h20v3H2zm0 5h20v3H2z"/>
             </svg>
           </a>
@@ -30,22 +30,18 @@
     <main>
 
       <!-- Map -->
-      <div class="row no-gutters">
-        <div class="maps">
-          <nav id="drawer">
-            <input class="input-filter" data-bind="textInput: current" type="text" placeholder="Filter" />
-            <svg class="input-filter-icon" width="24px" height="24px" version="1.1"
-                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-              <image xlink:href="img/outline-search-24px.svg" x="0" y="0" height="24px" width="24px"/>
-            </svg>
-            <div class="list" data-bind="foreach: filterMarkers">
-              <li data-bind="text: $data.title, click: showInfoWindow"></li>
-            </div>
-          </nav>
-        </div>
-        <div class="col-md-9">
-          <div id="map" class="map-canvas"></div>
-        </div>
+      <div class="d-flex flex-row">
+        <nav class="drawer">
+          <input class="input-filter" data-bind="textInput: current" type="text" placeholder="Filter" />
+          <svg class="input-filter-icon" width="24px" height="24px" version="1.1"
+               xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <image xlink:href="img/outline-search-24px.svg" x="0" y="0" height="24px" width="24px"/>
+          </svg>
+          <div class="list" data-bind="foreach: filterMarkers">
+            <li data-bind="text: $data.title, click: showInfoWindow"></li>
+          </div>
+        </nav>
+        <div id="map" class="map-canvas"></div>
       </div>
 
     </main>

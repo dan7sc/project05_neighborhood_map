@@ -1,15 +1,13 @@
 // Open the drawer when the menu ison is clicked.
 
-let menu = document.querySelector('#menu');
-let main = document.querySelector('main');
-let drawer = document.querySelector('#drawer');
+let menu = $('#menu');
+let main = $('header, .map-canvas, .list');
+let drawer = $('.drawer');
 
-menu.addEventListener('click', function(e) {
-  console.log("menu open");
-  drawer.classList.toggle('open');
+menu.on('click', function(e) {
+  drawer.toggleClass('open');
   e.stopPropagation();
 });
-main.addEventListener('click', function() {
-  console.log("menu close");
-  drawer.classList.remove('open');
+main.on('click', function() {
+  drawer.removeClass('open');
 });

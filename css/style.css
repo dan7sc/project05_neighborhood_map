@@ -5,6 +5,7 @@ body {
 
 .map-canvas {
   height: 34em;
+  width: 100%;
 }
 
 .list {
@@ -68,39 +69,29 @@ footer {
   font-size: 28px;
 }
 
-#menu svg {
-  width: 30px;
-  fill: #000;
+nav {
+  position: absolute;
+  z-index: 1;
+  -webkit-transform: translate(-300px, 0);
+  transform: translate(-300px, 0);
+  transition: transform 0.3s ease;
 }
 
-@media (max-width: 767.98px) {
-  .list {
-    max-height: 32em;
+.open {
+  -webkit-transform: translate(0, 0);
+  transform: translate(0, 0);
+}
+
+@media (min-width: 767.98px) {
+  #menu {
+    display: none;
   }
+  nav {
+    position:relative;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0);
+  }  
 }
-
-
-
-      nav {
-
-        position: absolute;
-        z-index: 1;
-        -webkit-transform: translate(-300px, 0);
-        transform: translate(-300px, 0);
-        transition: transform 0.3s ease;
-      }
-      nav.open {
-        -webkit-transform: translate(0, 0);
-        transform: translate(0, 0);
-      }
-
-      @media (min-width: 767.98px) {
-        nav {
-          position:relative;
-          -webkit-transform: translate(0, 0);
-          transform: translate(0, 0);
-        }  
-      }
 
 
 
