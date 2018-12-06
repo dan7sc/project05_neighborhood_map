@@ -44,6 +44,22 @@ footer {
   padding-top: 3em;
 }
 
+.error-msg {
+  color: #898989;
+  padding-left: 2em;
+  text-align: center;
+}
+
+.error-msg-title {
+  font-size: 28px;
+  padding-top: 5em;
+}
+
+.error-msg-content {
+  font-size: 20px;
+  padding-top: 1.5em;
+}
+
 @media (max-width: 767.98px) {
   .list {
     max-height: 8em;

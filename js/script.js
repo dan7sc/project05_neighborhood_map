@@ -212,3 +212,9 @@ function loadFlickrData(marker, str) {
     str += 'Flickr Data Could Not Be Loaded';
   });
 }
+
+// Error handler for google maps
+function googleMapsErrorHandler() {
+  $('.map-canvas').append('<div class="error-msg error-msg-title">Oops! Something went wrong.</div><div class="error-msg error-msg-content">This page didn`t load Google Maps correctly. See the JavaScrip console for technical details.</div>');
+  console.log("I don't know why! k:)");
+}
