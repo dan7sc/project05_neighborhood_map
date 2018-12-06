@@ -33,7 +33,7 @@
             <image xlink:href="img/outline-search-24px.svg" x="0" y="0" height="24px" width="24px"/>
           </svg>
           <div class="list" data-bind="foreach: filterMarkers">
-            <li data-bind="text: $data.title, event: { click: showInfoWindow }"></li>
+            <li data-bind="text: $data.title, click: showInfoWindow"></li>
           </div>
         </div>
         <div class="col-md-9">
