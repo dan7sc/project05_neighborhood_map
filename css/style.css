@@ -3,7 +3,7 @@ body {
   background: #dddddd
 }
 
-#map {
+.map-canvas {
   height: 32em;
 }
 
