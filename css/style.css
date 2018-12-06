@@ -15,8 +15,12 @@ body {
   max-height: 32em;
 }
 
+ul {
+  padding: 0;
+}
+
 li {
-  padding: 10px;
+  padding: 8px;
   overflow: auto;
 }
 
@@ -63,6 +67,11 @@ footer {
 
 .error-msg-load {
   font-size: 11px;
+}
+
+header {
+  padding-top: 0.5em;
+  padding-bottom: 0.4em;
 }
 
 .header-title {

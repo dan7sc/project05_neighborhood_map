@@ -1,3 +1,5 @@
+"use strict";
+
 var map;
 var infoWindow;
 // Create a new blank array for all markers
@@ -10,7 +12,6 @@ var client_secret = "CN5DI1ILH05BM0KITSPPCGH0I4IBDXXGCKYQN4JKSHPLHVZ3";
 var client_key = "2f201af775b1b5eea625f0b72ede4b7c";
 
 function initMap() {
-  'use strict';
   // Constructor creates a new map
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 40.7413549, lng: -73.9980244},
@@ -49,7 +50,6 @@ function initMap() {
 }
 
 var ViewModel = function() {
-  'use strict';
   let self = this;
   // observable array for list of locations
   this.currentLocations = ko.observableArray([]);
@@ -104,7 +104,7 @@ function populateInfoWindow(marker, infowindow, data) {
   // Check to make sure the infowindow is not already opened on this marker
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
-    infowindow.setContent('<h6>' + marker.title + '</h6>' + data + '<div><small>Source: FourSquare, Flickr</small></div>');
+    infowindow.setContent('<h6>' + marker.title + '</h6>' + data);
     infowindow.open(map, marker);
     // Make sure the marker property is cleared if the infowindow is closed
     infowindow.addListener('closeclick', function() {
@@ -167,7 +167,7 @@ function loadFourSquareData(marker) {
       let state = response.location.state;
 
       // Set foursquare data in HTML format
-      foursquareView += '<div>' + address + '</div><div>' + city + ', ' + state + '</div><div>' + country + '</div></br>';
+      foursquareView += '<div>' + address + '</div><div>' + city + ', ' + state + '</div><div>' + country + '</div>';
 
       // Set foursquare photo url
       let foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + id + '/photos?client_id=' + clientID + '&client_secret=' + client_secret + '&v=20180323' + '&ll=' + marker.position.lat() + ',' + marker.position.lng() + '&limit=1';
@@ -186,11 +186,13 @@ function loadFourSquareData(marker) {
           photoUrl = response.prefix + '200x200' + response.suffix;
           // Set foursquare photo in HTML format
           foursquareView += '<img src=' + photoUrl + ' alt="' + marker.title + '" height="150" width="180" />';
+          foursquareView += '<p>POWERED BY <a href="https://foursquare.com/">FOURSQUARE</a></p>';
           populateInfoWindow(marker, infoWindow, foursquareView);
         }
       }).fail(function() {
         console.log('FourSquare Photo Could Not Be Loaded.');
         foursquareView += '<div class="error-msg-load">Four Square Photo Could Not Be Loaded.</div>';
+        foursquareView += '<div>POWERED BY <a href="https://foursquare.com/">FOURSQUARE</a></div>';
         loadFlickrData(marker, foursquareView);
       });
     }
@@ -204,7 +206,7 @@ function loadFourSquareData(marker) {
 function loadFlickrData(marker, str) {
   let flickrView = '';
   // Set flickr url
-  let flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + client_key + '&media=photos&privacy_filter=1&format=json&lat=' + marker.position.lat() + '&lon=' + marker.position.lng() + '&radius=.1&radius_units=mi';
+  let flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + client_key + '&media=photos&privacy_filter=1&format=json&lat=' + marker.position.lat() + '&lon=' + marker.position.lng() + '&radius=.1&radius_units=mi&extras=owner_name,license,url_z';
 
   $.ajax({
     url: flickrUrl,
@@ -215,16 +217,23 @@ function loadFlickrData(marker, str) {
     let index = Math.round((Math.random()*100)%10);
     // Get response
     let data = response.photos.photo[index];
+    console.log(data);
     // Get photo details
     let id = data.id;
-    let owner = data.owner;
+    let owner = data.ownername;
     let secret = data.secret;
     let server = data.server;
     let farm = data.farm;
     let title = data.title;
-    let size = 'm';
+    let size = 'q';
+    let license_index = data.license;
+    let url_photo = data.url_z;
     // Set photo in the page
     flickrView += '<img src="https://farm'+ farm +'.staticflickr.com/'+ server +'/'+ id +'_'+ secret + '_' + size + '.jpg" alt="' + title + '" height="150" width="180" />';
+    flickrView += '<div><small>Photo <a href="' + url_photo + '"><abbr title="' + title + '"</abbr>@</a>' +  ' by ' + owner + '</small>';
+    flickrView += '<div><small>CC by <a href="' + licenses[license_index].url + '">' + licenses[license_index].name + '</a></small>';
+    flickrView += '<div>POWERED BY <a href="https://www.flickr.com/">FLICKR</a></div>';
+
     str += flickrView;
     populateInfoWindow(marker, infoWindow, str);
   }).fail(function() {

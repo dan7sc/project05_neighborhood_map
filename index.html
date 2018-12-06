@@ -37,9 +37,9 @@
                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <image xlink:href="img/outline-search-24px.svg" x="0" y="0" height="24px" width="24px"/>
           </svg>
-          <div class="list" data-bind="foreach: filterMarkers">
+          <ul class="list" data-bind="foreach: filterMarkers">
             <li data-bind="text: $data.title, click: showInfoWindow"></li>
-          </div>
+          </ul>
         </nav>
         <div id="map" class="map-canvas"></div>
       </div>

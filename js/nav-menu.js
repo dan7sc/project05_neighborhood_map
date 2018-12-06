@@ -1,4 +1,4 @@
-// Open the drawer when the menu ison is clicked.
+// Open the drawer when the menu is clicked.
 
 var menu = $('#menu');
 var main = $('header, footer, .map-canvas, .list');
