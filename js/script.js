@@ -40,8 +40,8 @@ function initMap() {
   // when the marker is clicked
   markers.forEach(function(elem) {
     elem.addListener('click', function() {
-      animateMarker(markers);
-      loadFourSquareData(markers);
+      animateMarker(elem);
+      loadFourSquareData(elem);
     });
   });
   showMarkers();

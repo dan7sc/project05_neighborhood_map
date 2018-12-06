@@ -45,10 +45,6 @@ li:hover {
   z-index: 1;
 }
 
-footer {
-  padding-top: 3em;
-}
-
 .error-msg {
   color: #898989;
   padding-left: 2em;
