@@ -25,10 +25,15 @@ This project consists for the following files:
   * style.css (in css folder) - styles the index.html file
   * images (in img folder) - images to show in index.html
   * knockout.js (in lib folder) - knockout javascript
-  * models.js (in js folder) - list of locations
+  * models.js (in js folder) - list of locations and licenses
+  * nav-menu (in js folder) - javascript file for toogle menu
   * script.js (in js folder) - personal javascript file
 
 #### Setup Project
 
   1. Download, in the same folder, the files show in Project Contents
   2. Open index.html file in a web browser of your choice
+
+#### Live
+
+You can see a live of the project [here](https://dan7sc.github.io/project05_neighborhood_map/). 
