@@ -170,7 +170,7 @@ function loadFourSquareData(marker) {
       foursquareView += '<div>' + address + '</div><div>' + city + ', ' + state + '</div><div>' + country + '</div>';
 
       // Set foursquare photo url
-      let foursquarePhotoUrl = 'https://api.oursquare.com/v2/venues/' + id + '/photos?client_id=' + clientID + '&client_secret=' + client_secret + '&v=20180323' + '&ll=' + marker.position.lat() + ',' + marker.position.lng() + '&limit=1';
+      let foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + id + '/photos?client_id=' + clientID + '&client_secret=' + client_secret + '&v=20180323' + '&ll=' + marker.position.lat() + ',' + marker.position.lng() + '&limit=1';
       let photoUrl = '';
       $.getJSON(foursquarePhotoUrl, function(photoData) {
         // Get response
@@ -183,7 +183,7 @@ function loadFourSquareData(marker) {
         }
         else {
           // Define photo path
-          photoUrl = response.prefix + '640x640' + response.suffix;
+          photoUrl = response.prefix + '200x200' + response.suffix;
           // Set foursquare photo in HTML format
           foursquareView += '<img src=' + photoUrl + ' alt="' + marker.title + '" height="150" width="180" />';
           // Set credits
