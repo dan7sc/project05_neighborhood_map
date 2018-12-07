@@ -170,7 +170,7 @@ function loadFourSquareData(marker) {
       foursquareView += '<div>' + address + '</div><div>' + city + ', ' + state + '</div><div>' + country + '</div>';
 
       // Set foursquare photo url
-      let foursquarePhotoUrl = 'https://api.foursquare.com/v2/venues/' + id + '/photos?client_id=' + clientID + '&client_secret=' + client_secret + '&v=20180323' + '&ll=' + marker.position.lat() + ',' + marker.position.lng() + '&limit=1';
+      let foursquarePhotoUrl = 'https://api.oursquare.com/v2/venues/' + id + '/photos?client_id=' + clientID + '&client_secret=' + client_secret + '&v=20180323' + '&ll=' + marker.position.lat() + ',' + marker.position.lng() + '&limit=1';
       let photoUrl = '';
       $.getJSON(foursquarePhotoUrl, function(photoData) {
         // Get response
@@ -183,22 +183,24 @@ function loadFourSquareData(marker) {
         }
         else {
           // Define photo path
-          photoUrl = response.prefix + '200x200' + response.suffix;
+          photoUrl = response.prefix + '640x640' + response.suffix;
           // Set foursquare photo in HTML format
           foursquareView += '<img src=' + photoUrl + ' alt="' + marker.title + '" height="150" width="180" />';
+          // Set credits
           foursquareView += '<p>POWERED BY <a href="https://foursquare.com/">FOURSQUARE</a></p>';
           populateInfoWindow(marker, infoWindow, foursquareView);
         }
       }).fail(function() {
         console.log('FourSquare Photo Could Not Be Loaded.');
         foursquareView += '<div class="error-msg-load">Four Square Photo Could Not Be Loaded.</div>';
+        // Set credits
         foursquareView += '<div>POWERED BY <a href="https://foursquare.com/">FOURSQUARE</a></div>';
         loadFlickrData(marker, foursquareView);
       });
     }
   }).fail(function() {
     foursquareView += '<div class="error-msg-load">FourSquare Data Could Not Be Loaded.</div>';
-    populateInfoWindow(marker, infoWindow, foursquareView);
+    loadFlickrData(marker, foursquareView);
   });
 }
 
@@ -207,7 +209,6 @@ function loadFlickrData(marker, str) {
   let flickrView = '';
   // Set flickr url
   let flickrUrl = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=' + client_key + '&media=photos&privacy_filter=1&format=json&lat=' + marker.position.lat() + '&lon=' + marker.position.lng() + '&radius=.1&radius_units=mi&extras=owner_name,license,url_z';
-
   $.ajax({
     url: flickrUrl,
     dataType: "jsonp",
@@ -217,7 +218,6 @@ function loadFlickrData(marker, str) {
     let index = Math.round((Math.random()*100)%10);
     // Get response
     let data = response.photos.photo[index];
-    console.log(data);
     // Get photo details
     let id = data.id;
     let owner = data.ownername;
@@ -230,6 +230,7 @@ function loadFlickrData(marker, str) {
     let url_photo = data.url_z;
     // Set photo in the page
     flickrView += '<img src="https://farm'+ farm +'.staticflickr.com/'+ server +'/'+ id +'_'+ secret + '_' + size + '.jpg" alt="' + title + '" height="150" width="180" />';
+    // Set credits
     flickrView += '<div><small>Photo <a href="' + url_photo + '"><abbr title="' + title + '"</abbr>@</a>' +  ' by ' + owner + '</small>';
     flickrView += '<div><small>CC by <a href="' + licenses[license_index].url + '">' + licenses[license_index].name + '</a></small>';
     flickrView += '<div>POWERED BY <a href="https://www.flickr.com/">FLICKR</a></div>';
